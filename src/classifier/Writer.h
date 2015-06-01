@@ -20,8 +20,12 @@
 #define WRITER_H_
 
 #include "Instance.h"
+#include "Part.h"
 #include <fstream>
+#include <vector>
 using namespace std;
+
+class Pipe;
 
 // Abstract class for the writer. Task-specific parts should derive
 // from this class and implement the pure virtual methods.
@@ -35,6 +39,7 @@ class Writer {
   void Open(const string &filepath);
   void Close();
   virtual void Write(Instance *instance) = 0;
+  virtual void WriteFull(Pipe *pipe, Instance *instance, Parts *parts, vector<double> &scores, vector<double> &predicted_outputs) {};
 
 protected:
   ofstream os_;

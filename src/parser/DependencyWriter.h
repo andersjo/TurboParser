@@ -31,6 +31,7 @@ public:
 
 public:
   void Write(Instance *instance);
+  void WriteFull(Pipe *pipe, Instance *instance, Parts *parts, vector<double> &scores, vector<double> &predicted_outputs);
 };
 
 #endif /* DEPENDENCYWRITER_H_ */

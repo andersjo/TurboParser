@@ -37,6 +37,8 @@ DECLARE_double(train_regularization_constant);
 DECLARE_double(train_initial_learning_rate);
 DECLARE_string(train_learning_rate_schedule);
 
+DECLARE_bool(output_scores);
+
 DECLARE_int32(parameters_max_num_buckets);
 
 // General training/test options.
@@ -73,6 +75,8 @@ class Options {
   bool test() { return test_; }
   bool evaluate() { return evaluate_; }
 
+  bool output_scores() { return output_scores_; }
+
   // Set option values.
   void SetTrainingFilePath(const string &file_train) {
     file_train_ = file_train;
@@ -96,6 +100,9 @@ class Options {
   bool test_;
   bool evaluate_;
   int train_epochs_;
+
+  // Include edge scores in the predicted output
+  bool output_scores_;
 
   // The regularization constant (C). The training optimization problem is:
   // min 1/(2C)*||w||^2 + sum_t(loss(w; x_t,y_t)).

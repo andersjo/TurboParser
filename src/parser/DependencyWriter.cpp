@@ -18,6 +18,7 @@
 
 #include "DependencyWriter.h"
 #include "DependencyInstance.h"
+#include "DependencyPipe.h"
 #include <iostream>
 #include <sstream>
 
@@ -34,6 +35,45 @@ void DependencyWriter::Write(Instance *instance) {
     os_ << "_" << "\t"; // Change this later
     os_ << dependency_instance->GetHead(i) << "\t";
     os_ << dependency_instance->GetDependencyRelation(i) << endl;
+  }
+  os_ << endl;
+}
+
+
+void DependencyWriter::WriteFull(Pipe *pipe, Instance *instance, Parts *parts, vector<double> &scores, vector<double> &predicted_outputs) {
+  DependencyPipe *dependency_pipe = static_cast<DependencyPipe*>(pipe);
+  DependencyParts *dependency_parts = static_cast<DependencyParts*>(parts);
+  DependencyInstance *dependency_instance = 
+    static_cast<DependencyInstance*>(instance);
+
+  int offset, num_labeled_arcs;
+  dependency_parts->GetOffsetLabeledArc(&offset, &num_labeled_arcs);
+
+
+  for (int i = 1; i < dependency_instance->size(); ++i) {
+    os_ << i << "\t";
+    os_ << dependency_instance->GetForm(i) << "\t";
+    os_ << dependency_instance->GetLemma(i) << "\t";
+    os_ << dependency_instance->GetCoarsePosTag(i) << "\t";
+    os_ << dependency_instance->GetPosTag(i) << "\t";
+    os_ << "_" << "\t"; // Change this later
+    os_ << dependency_instance->GetHead(i) << "\t";
+    os_ << dependency_instance->GetDependencyRelation(i) << "\t";
+
+    // Output possible edge scores 
+    if (dependency_pipe->GetDependencyOptions()->labeled()) {
+      int offset, num_labeled_arcs;
+      dependency_parts->GetOffsetLabeledArc(&offset, &num_labeled_arcs);
+      for (int r = 0; r < num_labeled_arcs; ++r) {
+        DependencyPartLabeledArc *arc = 
+          static_cast<DependencyPartLabeledArc*>((*dependency_parts)[offset + r]);
+        if (arc->modifier() == i) {
+          string label_name = dependency_pipe->GetDependencyDictionary()->GetLabelName(arc->label());
+          os_ << arc->head() << "-" << label_name << ":" << scores[offset + r] << " ";
+        }
+      }
+      os_ << "\n";
+    }
   }
   os_ << endl;
 }

@@ -405,7 +405,12 @@ void Pipe::Run() {
                        parts, gold_outputs, predicted_outputs);
     }
 
-    writer_->Write(output_instance);
+    if (options_->output_scores()) {
+      writer_->WriteFull(this, output_instance, parts, scores, predicted_outputs);  
+    } else {
+      writer_->Write(output_instance);  
+    }
+    
 
     if (formatted_instance != instance) delete formatted_instance;
     delete output_instance;
