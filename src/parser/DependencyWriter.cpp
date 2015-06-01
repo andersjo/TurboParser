@@ -62,8 +62,6 @@ void DependencyWriter::WriteFull(Pipe *pipe, Instance *instance, Parts *parts, v
 
     // Output possible edge scores 
     if (dependency_pipe->GetDependencyOptions()->labeled()) {
-      int offset, num_labeled_arcs;
-      dependency_parts->GetOffsetLabeledArc(&offset, &num_labeled_arcs);
       for (int r = 0; r < num_labeled_arcs; ++r) {
         DependencyPartLabeledArc *arc = 
           static_cast<DependencyPartLabeledArc*>((*dependency_parts)[offset + r]);
