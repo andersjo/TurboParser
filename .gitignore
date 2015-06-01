@@ -13,3 +13,6 @@ deps/local/
 *.o
 stamp-h1
 .deps
+.idea
+TurboSemanticParser
+TurboEntityRecognizer
