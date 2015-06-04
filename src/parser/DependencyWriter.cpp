@@ -46,8 +46,14 @@ void DependencyWriter::WriteFull(Pipe *pipe, Instance *instance, Parts *parts, v
   DependencyInstance *dependency_instance = 
     static_cast<DependencyInstance*>(instance);
 
-  int offset, num_labeled_arcs;
-  dependency_parts->GetOffsetLabeledArc(&offset, &num_labeled_arcs);
+  int offset, num_arcs;
+  if (dependency_pipe->GetDependencyOptions()->labeled()) {
+  	dependency_parts->GetOffsetLabeledArc(&offset, &num_arcs);
+  } else {
+  	dependency_parts->GetOffsetArc(&offset, &num_arcs);
+  }
+
+
 
 
   for (int i = 1; i < dependency_instance->size(); ++i) {
@@ -62,7 +68,7 @@ void DependencyWriter::WriteFull(Pipe *pipe, Instance *instance, Parts *parts, v
 
     // Output possible edge scores 
     if (dependency_pipe->GetDependencyOptions()->labeled()) {
-      for (int r = 0; r < num_labeled_arcs; ++r) {
+      for (int r = 0; r < num_arcs; ++r) {
         DependencyPartLabeledArc *arc = 
           static_cast<DependencyPartLabeledArc*>((*dependency_parts)[offset + r]);
         if (arc->modifier() == i) {
@@ -71,7 +77,17 @@ void DependencyWriter::WriteFull(Pipe *pipe, Instance *instance, Parts *parts, v
         }
       }
       os_ << "\n";
+    } else {
+      for (int r = 0; r < num_arcs; ++r) {
+        DependencyPartArc *arc = 
+          static_cast<DependencyPartArc*>((*dependency_parts)[offset + r]);
+        if (arc->modifier() == i) {
+          os_ << arc->head() << ":" << scores[offset + r] << " ";
+        }
+      }
+      os_ << "\n";
     }
+
   }
   os_ << endl;
 }

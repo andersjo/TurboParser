@@ -3,7 +3,7 @@ make install
 export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:`pwd;`/deps/local/lib:"
 mkdir -p models
 GLOG_logtostderr=1 ./TurboParser --model_type=basic \
-	--prune_basic=1 --prune_labels=1 --prune_distances=1 \
+	--prune_basic=0 --prune_labels=0 --prune_distances=0 --labeled=0 \
 	--train \
 	--file_train=data/sample/sample_train.conll \
 	--file_model=models/sample_parser.model
